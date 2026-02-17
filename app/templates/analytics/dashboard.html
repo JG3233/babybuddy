@@ -1,0 +1,60 @@
+{% extends "base/base.html" %}
+
+{% block title %}Dashboard | BabyBuddy{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h1>Dashboard</h1>
+  {% if active_family %}
+    <p class="meta">Active family: <strong>{{ active_family.name }}</strong></p>
+    <p class="meta">Active baby: <strong>{% if active_baby %}{{ active_baby.name }}{% else %}None{% endif %}</strong></p>
+  {% else %}
+    <p>No family selected yet. Create one in <a href="{% url 'families' %}">Families</a>.</p>
+  {% endif %}
+</section>
+
+<section class="grid cols-4">
+  <article class="card stat"><h3>Last 24h</h3><p>{{ stats.last_24h }}</p></article>
+  <article class="card stat"><h3>Last 7d</h3><p>{{ stats.last_7d }}</p></article>
+  <article class="card stat"><h3>Last 30d</h3><p>{{ stats.last_30d }}</p></article>
+  <article class="card stat"><h3>Feedings (24h)</h3><p>{{ stats.feeding }}</p></article>
+</section>
+
+<section class="grid cols-2">
+  <article class="card">
+    <h2>Quick Actions</h2>
+    <div class="quick-actions">
+      <a class="quick-link" href="{% url 'families' %}">Manage Families</a>
+      {% if nav_has_family %}
+      <a class="quick-link" href="{% url 'babies' %}">Manage Babies</a>
+      {% endif %}
+      {% if nav_has_baby %}
+      <a class="quick-link" href="{% url 'timeline' %}">Open Timeline</a>
+      <a class="quick-link" href="{% url 'calendar' %}">Open Calendar</a>
+      {% endif %}
+      {% if active_baby %}
+      <a class="quick-link quick-link-primary" href="{% url 'event_new' active_baby.id %}">Log Event</a>
+      {% endif %}
+    </div>
+  </article>
+
+  <article class="card">
+    <h2>Babies</h2>
+    {% if babies %}
+      <ul class="list">
+        {% for baby in babies %}
+          <li>
+            <div>
+              <strong>{{ baby.name }}</strong>
+              <span class="meta">{{ baby.timezone }}</span>
+            </div>
+            <a href="{% url 'event_new' baby.id %}">Log Event</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No babies added yet.</p>
+    {% endif %}
+  </article>
+</section>
+{% endblock %}

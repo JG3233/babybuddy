@@ -1,0 +1,36 @@
+{% extends "base/base.html" %}
+
+{% block title %}Families | BabyBuddy{% endblock %}
+
+{% block content %}
+<section class="grid cols-2">
+  <article class="card">
+    <h2>Create Family</h2>
+    <form method="post">
+      {% csrf_token %}
+      <label for="id_name">Family Name</label>
+      <input id="id_name" name="name" required>
+      <button type="submit">Create Family</button>
+    </form>
+  </article>
+
+  <article class="card">
+    <h2>Your Families</h2>
+    {% if memberships %}
+      <ul class="list">
+        {% for membership in memberships %}
+          <li>
+            <div>
+              <strong>{{ membership.family.name }}</strong>
+              <span class="meta">{{ membership.role }}</span>
+            </div>
+            <a href="{% url 'family_switch' %}?family={{ membership.family.id }}">Use</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No families yet.</p>
+    {% endif %}
+  </article>
+</section>
+{% endblock %}

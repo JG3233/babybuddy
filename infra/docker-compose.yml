@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: babybuddy-db
+    environment:
+      POSTGRES_DB: babybuddy
+      POSTGRES_USER: babybuddy
+      POSTGRES_PASSWORD: babybuddy
+    ports:
+      - "55432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U babybuddy -d babybuddy"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

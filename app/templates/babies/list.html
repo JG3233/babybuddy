@@ -1,0 +1,50 @@
+{% extends "base/base.html" %}
+
+{% block title %}Babies | BabyBuddy{% endblock %}
+
+{% block content %}
+<section class="grid cols-2">
+  <article class="card">
+    <h2>Add Baby</h2>
+    <form method="post">
+      {% csrf_token %}
+      <label for="id_family">Family</label>
+      <select id="id_family" name="family_id" required>
+        {% for family in families %}
+        <option value="{{ family.id }}" {% if selected_family and family.id == selected_family.id %}selected{% endif %}>{{ family.name }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="id_baby_name">Name</label>
+      <input id="id_baby_name" name="name" required>
+
+      <label for="id_birth_date">Birth Date</label>
+      <input id="id_birth_date" type="date" name="birth_date">
+
+      <label for="id_timezone">Timezone</label>
+      <input id="id_timezone" name="timezone" value="UTC">
+
+      <button type="submit">Add Baby</button>
+    </form>
+  </article>
+
+  <article class="card">
+    <h2>Babies</h2>
+    {% if babies %}
+      <ul class="list">
+        {% for baby in babies %}
+          <li>
+            <div>
+              <strong>{{ baby.name }}</strong>
+              <span class="meta">{{ baby.timezone }}</span>
+            </div>
+            <a href="{% url 'event_new' baby.id %}">Log Event</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No babies in this family yet.</p>
+    {% endif %}
+  </article>
+</section>
+{% endblock %}

@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: babybuddy-web
+    runtime: python
+    plan: starter
+    rootDir: app
+    buildCommand: "pip install -r ../requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
+    startCommand: "gunicorn babybuddy.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: babybuddy.settings.production
+      - key: PYTHON_VERSION
+        value: 3.13.1
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: babybuddy-web.onrender.com
+      - key: DATABASE_NAME
+        fromDatabase:
+          name: babybuddy-db
+          property: database
+      - key: DATABASE_USER
+        fromDatabase:
+          name: babybuddy-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: babybuddy-db
+          property: password
+      - key: DATABASE_HOST
+        fromDatabase:
+          name: babybuddy-db
+          property: host
+      - key: DATABASE_PORT
+        fromDatabase:
+          name: babybuddy-db
+          property: port
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://babybuddy-web.onrender.com
+
+databases:
+  - name: babybuddy-db
+    plan: basic-1gb

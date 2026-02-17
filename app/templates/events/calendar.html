@@ -1,0 +1,27 @@
+{% extends "base/base.html" %}
+
+{% block title %}Calendar | BabyBuddy{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h1>Calendar</h1>
+  <p class="meta">{{ year }}-{{ month }} ({{ timezone }})</p>
+</section>
+
+<section class="card calendar-grid">
+  {% for row in day_rows %}
+  <article class="day-card">
+    <h3>{{ row.date|date:"M j" }}</h3>
+    {% if row.events %}
+      <ul>
+      {% for event in row.events %}
+        <li><span class="badge">{{ event.event_type }}</span> {{ event.baby.name }}</li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p class="meta">No events</p>
+    {% endif %}
+  </article>
+  {% endfor %}
+</section>
+{% endblock %}

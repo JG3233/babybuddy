@@ -1,0 +1,54 @@
+{% extends "base/base.html" %}
+
+{% block title %}Timeline | BabyBuddy{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h1>Timeline</h1>
+  <form method="get" class="inline-form">
+    <label for="event_type">Type</label>
+    <select id="event_type" name="type">
+      <option value="">All</option>
+      {% for value in event_types %}
+      <option value="{{ value }}" {% if active_event_type == value %}selected{% endif %}>{{ value }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Filter</button>
+  </form>
+</section>
+
+<section class="card">
+  {% if page.object_list %}
+  <ul class="list timeline">
+    {% for event in page.object_list %}
+      <li>
+        <div>
+          <strong>{{ event.event_type|title }}</strong>
+          <span class="meta">{{ event.baby.name }} · {{ event.occurred_at_utc }}</span>
+          {% if event.notes %}<p>{{ event.notes }}</p>{% endif %}
+        </div>
+        <div class="actions">
+          <a class="action-pill" href="{% url 'event_edit' event.id %}">Edit</a>
+          <form method="post" action="{% url 'event_delete' event.id %}">
+            {% csrf_token %}
+            <button type="submit" class="action-pill action-pill-danger">Delete</button>
+          </form>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <div class="pagination">
+    {% if page.has_previous %}
+      <a href="?page={{ page.previous_page_number }}">Previous</a>
+    {% endif %}
+    <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+    {% if page.has_next %}
+      <a href="?page={{ page.next_page_number }}">Next</a>
+    {% endif %}
+  </div>
+  {% else %}
+    <p>No events yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base/base.html" %}
+
+{% block title %}{% if mode == 'edit' %}Edit Event{% else %}New Event{% endif %} | BabyBuddy{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h1>{% if mode == 'edit' %}Edit Event{% else %}Log Event{% endif %}</h1>
+  <p class="meta">Baby: {{ baby.name }}</p>
+
+  <form method="post" data-event-form
+    {% if mode == "edit" %}
+    action="{% url 'event_update' event.id %}"
+    {% else %}
+    action="{% url 'event_create' baby.id %}"
+    {% endif %}
+  >
+    {% csrf_token %}
+
+    <label for="id_event_type">Event Type</label>
+    {{ form.event_type }}
+
+    <label for="id_occurred_at_local">Occurred At</label>
+    {{ form.occurred_at_local }}
+
+    <label for="id_timezone">Timezone</label>
+    {{ form.timezone }}
+
+    <label for="id_notes">Notes</label>
+    {{ form.notes }}
+
+    <fieldset data-event-section="feeding">
+      <legend>Feeding Details</legend>
+      <label>Method</label>{{ form.feeding_method }}
+      <label>Amount (ml)</label>{{ form.feeding_amount_ml }}
+      <label>Side</label>{{ form.feeding_side }}
+      <label>Duration (min)</label>{{ form.feeding_duration_min }}
+    </fieldset>
+
+    <fieldset data-event-section="diaper">
+      <legend>Diaper Details</legend>
+      <label>Type</label>{{ form.diaper_type }}
+      <label>Color</label>{{ form.diaper_color }}
+      <label>Consistency</label>{{ form.diaper_consistency }}
+    </fieldset>
+
+    <fieldset data-event-section="sleep">
+      <legend>Sleep Details</legend>
+      <label>End Time</label>{{ form.sleep_end_local }}
+      <label>Quality</label>{{ form.sleep_quality }}
+    </fieldset>
+
+    <fieldset data-event-section="pumping">
+      <legend>Pumping Details</legend>
+      <label>Amount (ml)</label>{{ form.pumping_amount_ml }}
+      <label>Duration (min)</label>{{ form.pumping_duration_min }}
+      <label>Side</label>{{ form.pumping_side }}
+    </fieldset>
+
+    {% if form.errors %}
+      <div class="form-errors">{{ form.errors }}</div>
+    {% endif %}
+
+    <button type="submit">{% if mode == 'edit' %}Update{% else %}Create{% endif %} Event</button>
+  </form>
+</section>
+{% endblock %}

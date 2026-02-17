@@ -1,0 +1,15 @@
+{% extends "base/base.html" %}
+
+{% block title %}Register | BabyBuddy{% endblock %}
+
+{% block content %}
+<section class="card narrow">
+  <h1>Create Account</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create account</button>
+  </form>
+  <p class="meta">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+</section>
+{% endblock %}
